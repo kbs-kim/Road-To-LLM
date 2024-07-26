@@ -4,18 +4,30 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+//레이아웃 노트 패키지 참조하기 ***
+var expressLayouts= require('express-ejs-layouts');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-//개발자 정의 게시글 웹페이지 요청과 응답라우터 파일 참조하기 
-var articleRouter = require('./routes/article.js');
-
+//개발자 정의 게시글 웹페이지 요청과 응답라우터 파일 참조하기 ****
+var articleRouter = require('./routes/article.js'); 
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//모든 뷰페이지에 적용되는 레이아웃 뷰파일 설정하기***
+app.set('layout', 'layout'); //전체레이아웃 파일 지정하기
+app.set("layout extractScripts", true);
+app.set("layout extractStyles", true);
+app.set("layout extractMetas", true);
+app.use(expressLayouts); //노드앱에 레이아웃 기능 추가 적용하기
+
+
 
 app.use(logger('dev'));
 app.use(express.json());
