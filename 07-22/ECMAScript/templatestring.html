@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>템플릿 문자열 문법 실습</h1>
+
+    <script>
+        const name = "김범수";
+        const age = 25;
+        let address = '충청북도 청주시 상당구';
+        //문자열과 숫자를 더하면 문자열로 인식한다.
+        let introduction ='저를 소개합니다. 이름은 '+name+'이고 나이는 '+age+'세 입니다. 주소는 '+address+'입니다.';
+
+        console.log("올드한 방식은 문자열 변수조합:",introduction);
+
+
+        //템플릿 문자열 문법으로 문자열을 만들어봅시다.
+        //문자열 기본 템플릿을 백틱(`)으로 감싸준다.(역 홑따옴표)
+        //훨씬 가독성도 좋고 편리하다.
+        
+        let introduction2 = `저를 소개합니다. 이름은 ${name}이고 나이는 ${age}세 입니다. 주소는 ${address}입니다.`;
+        console.log('신규 템플릿 문자열 문법:',introduction2);
+
+
+    </script>
+    
+</body>
+</html>
