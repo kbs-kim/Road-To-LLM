@@ -17,6 +17,15 @@ router.get('/', function(req, res, next) {
 //여기서는 .ejs 확장자를 사용하는 템플릿 파일을 사용하고 있습니다.
 
 
+
+
+
+
+
+
+
+
+
 /* 
 - 관리자 웹사이트 로그인 웹페이지 요청과 응답처리 라우팅메소드
 - 요청주소: http://localhost:5001/login
@@ -24,11 +33,13 @@ router.get('/', function(req, res, next) {
 - 응답결과: login.ejs 뷰페이지 반환
 */
 router.get('/login', function(req, res, next) { // '/login' 경로에 대한 GET 요청을 처리하는 라우팅 메소드입니다.
-  res.render('login.ejs',{layout : false});
+  res.render('login.ejs',{layout : false}); //layout : false 를 추가하여 레이아웃을 사용하지 않도록 설정합니다.***
   // -> login.ejs파일을 생성해야한다.
 // 'login.ejs' 템플릿 파일을 렌더링하고, {resultMsg:''} 객체를 템플릿에 전달하여 resultMsg라는 변수로 사용할 수 있도록 합니다.
 // 여기서 resultMsg는 뷰 페이지에서 사용할 수 있는 빈 문자열 메시지입니다. 'login.ejs' 템플릿 파일은 일반적으로 views 디렉토리에 위치합니다.
 });
+
+
 
 
 /* 

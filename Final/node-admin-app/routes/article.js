@@ -8,7 +8,7 @@ var router = express.Router();
 - 응답결과: admin/list.ejs 뷰페이지 반환
 */
 router.get('/list', function(req, res, next) {
-    res.render('admin/list');
+    res.render('article/list');
 });
 
 /* 
@@ -18,7 +18,7 @@ router.get('/list', function(req, res, next) {
 - 응답결과: admin/create.ejs 뷰페이지 반환
 */
 router.get('/create', function(req, res, next) {
-    res.render('admin/create');
+    res.render('article/create');
 });
 
 /* 
@@ -29,7 +29,12 @@ router.get('/create', function(req, res, next) {
 */
 router.post('/create', function(req, res, next) {
     //기능구현
-    res.redirect('/admin/list');
+    const id = req.body.id; //req.body.id는 name이 id인 input태그의 값을 가져온다.
+    const pw = req.body.pw; //req.body.pw는 name이 pw인 input태그의 값을 가져온다.
+    const code = req.body.code; //req.body.code는 name이 code인 input태그의 값을 가져온다.
+
+
+    res.redirect('/article/list');
 });
 
 
@@ -42,20 +47,20 @@ router.post('/modify',function(req,res,next){
     const pwd = req.body.pw;
     const code = req.body.code;
 
-    res.redirect('/admin/list');
+    res.redirect('/article/list');
 });
 
 
 //http://localhost:5001/admin/delete
 router.get('/delete', function(req, res, next) {
-    res.redirect('/admin/list');
+    res.redirect('/article/list');
 });
 
 //http://localhost:5001/admin/modify/1
 router.get('/modify/:id', function(req, res, next) { //파라미터방식을 사용하는 경우이다. 
     //또한 파라미터 방식을 사용하는 경우 제일 하단에다가 내려야한다.
 
-    res.render('admin/modify.ejs');
+    res.render('article/modify.ejs');
 });
 
 

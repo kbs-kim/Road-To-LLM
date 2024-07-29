@@ -38,9 +38,9 @@ router.post('/create', function(req, res, next) {
 
 //http://localhost:5001/admin/modify
 router.post('/modify',function(req,res,next){
-    const id = req.body.id;
-    const pwd = req.body.pw;
-    const code = req.body.code;
+    const id = req.body.id; //req.body.id는 name이 id인 input태그의 값을 가져온다.
+    const pwd = req.body.pw; //req.body.pw는 name이 pw인 input태그의 값을 가져온다.
+    const code = req.body.code; //req.body.code는 name이 code인 input태그의 값을 가져온다.
 
     res.redirect('/admin/list');
 });
@@ -53,7 +53,7 @@ router.get('/delete', function(req, res, next) {
 
 //http://localhost:5001/admin/modify/1
 router.get('/modify/:id', function(req, res, next) { //파라미터방식을 사용하는 경우이다. 
-    //또한 파라미터 방식을 사용하는 경우 제일 하단에다가 내려야한다.
+    //또한 파라미터 방식을 사용하는 경우 제일 하단에다가 내려야한다.****
 
     res.render('admin/modify.ejs');
 });
