@@ -24,7 +24,8 @@ router.get('/', function(req, res, next) {
 - 응답결과: login.ejs 뷰페이지 반환
 */
 router.get('/login', function(req, res, next) { // '/login' 경로에 대한 GET 요청을 처리하는 라우팅 메소드입니다.
-res.render('login.ejs',{resultMsg:''}); // -> login.ejs파일을 생성해야한다.
+  res.render('login.ejs',{layout : false});
+  // -> login.ejs파일을 생성해야한다.
 // 'login.ejs' 템플릿 파일을 렌더링하고, {resultMsg:''} 객체를 템플릿에 전달하여 resultMsg라는 변수로 사용할 수 있도록 합니다.
 // 여기서 resultMsg는 뷰 페이지에서 사용할 수 있는 빈 문자열 메시지입니다. 'login.ejs' 템플릿 파일은 일반적으로 views 디렉토리에 위치합니다.
 });
