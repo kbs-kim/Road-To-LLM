@@ -7,6 +7,10 @@ var logger = require('morgan');
 //레이아웃 노드패키지 참조하기 
 var expressLayouts = require('express-ejs-layouts'); //추가***
 
+
+//ORM Model 영역의 sequelize 속성 (DB연결 객체)응 참조합니다.&&&&
+var sequelize = require('./models/index.js').sequelize;
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -16,6 +20,9 @@ var articleRouter = require('./routes/article'); //추가***
 
 
 var app = express();
+
+//mysql과 자동연결처리 및 모델기반 물리 테이블 생성처리제공 &&&&
+sequelize.sync();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
