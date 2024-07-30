@@ -5,8 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressLayouts = require('express-ejs-layouts');
 
+//환경설정파일 구성하기
+require('dotenv').config();
 
-//***ORM DB연결 객체 sequelize를 app.js에서 참조하기 위해 추가*** //index.js에서 모듈로 만들어진 객체를 참조함***
+
+//ORM DB연결객체 sequelize 참조하기 
 var sequelize = require('./models/index.js').sequelize;
 
 var indexRouter = require('./routes/index');
@@ -21,8 +24,7 @@ var articleRouter = require('./routes/article');
 var app = express();
 
 //mysql과 자동연결처리 및 모델기반 물리 테이블 생성처리제공
-sequelize.sync(); //***모델정보를 기반으로 물리테이블 생성처리***
-
+sequelize.sync();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
