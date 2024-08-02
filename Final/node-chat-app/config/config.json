@@ -9,8 +9,8 @@
   },
   "test": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "b05060605b!",
+    "database": "edu_community",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+09:00"
@@ -18,8 +18,8 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "b05060605b!",
+    "database": "edu_community",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+09:00"
