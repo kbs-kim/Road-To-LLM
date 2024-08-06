@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "admin", //모델명(변수명)
+    "admin",
     {
       admin_member_id: {
         type: DataTypes.INTEGER,
@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
       company_code: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        comment: "소속회사코드-기준정보테이블참조,1-자회사,2-협력업체",
+        comment: "소속회사코드-기준정보테이블참조,0-자회사,1-협력업체",
       },
       admin_id: {
         type: DataTypes.STRING(100),

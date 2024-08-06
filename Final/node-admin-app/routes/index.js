@@ -3,6 +3,10 @@
 var express = require('express');
 var router = express.Router();
 
+//관리자 암호를 단방향암호화(해시알고리즘) 하기위해 bcryptjs패키지 참조하기 
+var bcrypt = require('bcryptjs');
+
+
 //ORM DB객체를 참조합니다.
 var db = require('../models/index.js');
 
@@ -49,11 +53,35 @@ router.post('/login', async(req, res, next)=> {
   if(admin){
 
     //db저장된 암호와 관리자가 로그인화면에서 입력한 암호가 일치하는지 체크
-    //bcrypt.compare(입력암호,저장된암호)함수를 사용해서 암호를 비교한다.
+    //bcrypt.compare('로그인화면에서 전달된 암호',db에저장된암호화된문자열)메소드는 암호가 같으면 true반환,다르면 false반환
     if(bcrypt.compare(admin_password,admin.admin_password)){
+      
       //Step4: 아이디 /암호가 일치하면 메인페이지로 이동시키고
       //그렇지 않으면 처리결과 data를 login.ejs에 전달합니다.
-      res.redirect('/main');
+
+      //Step5: 서버 세션에 저장할 로그인 사용자의 주요정보 설정하기 
+      var sessionLoginData = {
+        admin_member_id:admin.admin_member_id,
+        company_code:admin.company_code,
+        admin_id:admin.admin_id,
+        admin_name:admin.admin_name,
+      };
+
+      //express-session 패키지를 설치하고 app.js에설정하면 req 객체에 session속성이 추가됩니다. 
+      //req.session 속성에 loginUser 동적속성을 정의하고 값으로
+      //현재 로그인한 사용자의 주요데이터를 저장합니다. 
+      req.session.loginUser = sessionLoginData;
+
+      //현재 사용자의 로그인 여부를 동적속성 isLogined를 정의하고 값으로 true를 설정함.
+      req.session.isLogined = true; 
+
+      //서버세션을 최종 저장하고 메인페이지로 이동시킵니다.
+      req.session.save(function(){
+        console.log('세션에 저장완료');
+        res.redirect('/main');
+      });
+
+
     }else{
       //암호가 일치하지 않은경우 
       resultMsg.code = 402;
