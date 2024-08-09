@@ -1,12 +1,59 @@
 <!-- DOCTYPE html: 해당 index.html문서는 html5 표준문법에 의해 코딩된 문서임을 명시합니다.-->
 <!DOCTYPE html>
-<html lang="en">
+
+<!--html 페이지의 콘텐츠 내용이 기본이 영어버전임을 명시합니다.-->
+<html lang="ko">
+
+<!-- ****헤드태그 영역은 사용자를 위한 영역이 아니고*** 웹브라우저나 검색 엔진 SW Bot을 위한 추가 정보제공(메타데이터) 영역입니다.-->
 <head>
+
+    <!-- 웹브라우저에게 영어권 문자뿐만 아니라 유니코드문자(UTF-8: 한글/중국어/일본어/태국어/아랍어등 비영어권문자를
+    유니코드 문자라고 함)도  컨텐츠로 사용할 수 있음을 명시합니다. -->
     <meta charset="UTF-8">
+
+    <!-- 모바일 브라우저에서 기본 가로 해상도를 물리적 디바이스 가로 해상도를 기준으로 설정하고 
+    확대/축소를 설정하는 기능제공 -->
+    <!-- width=device-width : 넓이는 디바이스의 가로 해상도를 기준으로 설정
+    initial-scale=1.0 : 확대/축소를 1배율로 설정 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <!-- 웹브라우저의 탭에 표시되는 웹페이지 제목표시 및 검색엔진sw에 제공된 웹페이지의 제목정보제공
+    웹페이지내에서 가장 중요한 태그입니다.*** -->
+    <title>메인페이지</title>
+
+    <!-- 외부 스타일시트파일을 연결하는 태그 -->
+    <link rel="stylesheet" href="./common.css">
+
+
+    <!-- 해당 페이지의 스타일 적용을 위한 스타일 정의 영역(임베디드된 스타일 시트) -->
+    <style>
+        /* h1태그의 스타일을 정의합니다. */
+        h1 {
+            color: red;
+            font-size: 30px;
+            text-align: center;
+        }
+
+    </style>
+
 </head>
+
+
+<!-- body태그의 모든 html태그는 사용자를 위한 UI/UX제공 용도로 제공됩니다. 
+실제 사용자가 보는 화면의 내용은 모두 BODY태그내에 존재합니다. -->
 <body>
+
+    <!-- 중복선언된 스타일은 인라인 스타일이 우선적으로 적용됩니다. -->
+    <h1 style="color:blue">메인제목입니다.</h1>
+    <h2>부제목입니다.</h2>
+
+    <!-- 해당 웹페이지의 기능을 구현하는 프론트엔드 기능구현 영역입니다. -->
+     <script>
+        console.log("Index.html페이지가 로딩되었습니다.");
+        console.error("페이지 로딩시 에러메시지 출력하기");
+        console.warn("페이지 로딩시 경고메시지 출력하기");
+        console.info("페이지 로딩시 정보메시지 출력하기");
+     </script>
     
 </body>
 </html>
