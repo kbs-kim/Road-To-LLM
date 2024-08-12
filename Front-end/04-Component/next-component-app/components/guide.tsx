@@ -1,9 +1,9 @@
+import { GuideType, IGuide } from '@/interface/main';
 
 type arrGuide = GuideType[];
 
 const Guide = ({ guides }: { guides: arrGuide }) => {
-  return (import { GuideType, IGuide } from '@/interface/main';
-
+  return (
     <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
       {guides.map((guide: GuideType, index: number) => (
         <a
