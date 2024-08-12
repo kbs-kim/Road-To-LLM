@@ -10,12 +10,12 @@ const Entry = () => {
   //개별 UI요소별로 state생성시 관리요소가 많이 발생함을 인지하세요.
   const [name, setName] = useState<string>('');
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [telephoneType, setTelephoneType] = useState(0);
-  const [telephone, setTelephone] = useState('');
-  const [introduction, setIntroduction] = useState('');
-  const [agree, setAgree] = useState(false);
+  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [telephoneType, setTelephoneType] = useState<number>(0);
+  const [telephone, setTelephone] = useState<string>('');
+  const [introduction, setIntroduction] = useState<string>('');
+  const [agree, setAgree] = useState<boolean>(false);
 
   //이름 텍스트박스 값이 변경될떄마다 name State값을 변경하기
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
