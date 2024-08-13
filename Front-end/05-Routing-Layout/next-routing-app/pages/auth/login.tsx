@@ -1,6 +1,6 @@
 const Login = () => {
     return (
-        <div>
+        <div className="h-[700px]">
             Enter
         </div>
     );
