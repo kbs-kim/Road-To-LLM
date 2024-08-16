@@ -14,13 +14,13 @@ const navigation = [
   { name: 'Profile', href: '/mypage/profile', icon: UsersIcon, current: false },
   {
     name: 'Blogs',
-    href: '/blogs',
+    href: '/mypage/blog/list',
     icon: DocumentDuplicateIcon,
     current: false,
   },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: (string | undefined | false | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }
 
@@ -41,7 +41,7 @@ const MyPageLayout: NextPage<MyPageLayoutProps> = props => {
           {/* 화면 분할 컨테이너 */}
           <div className="flex">
             {/* 좌측 컨텐츠 영역 (1/3) */}
-            <div className="w-1/4  p-4 hidden lg:block">
+            <div className="w-1/4 p-4 hidden lg:block">
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6">
                 <nav className="flex flex-1 flex-col">
@@ -80,7 +80,7 @@ const MyPageLayout: NextPage<MyPageLayoutProps> = props => {
             </div>
 
             {/* 우측 컨텐츠 영역 (2/3) */}
-            <div className="w-full lg:w-3/4  p-4">{props.children}</div>
+            <div className="w-full lg:w-3/4 p-4">{props.children}</div>
           </div>
         </div>
       </div>
