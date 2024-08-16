@@ -22,6 +22,11 @@ var usersRouter = require("./routes/users");
 //회원정보 관리 RESTful API 라우터파일 참조하기
 var memberAPIRouter = require("./routes/memberAPI");
 
+var articleAPIRouter = require("./routes/articleAPI");
+
+
+
+
 var app = express();
 
 //mysql과 자동연결처리 및 모델기반 물리 테이블 생성처리제공
@@ -53,6 +58,7 @@ app.use("/users", usersRouter);
 
 //memberAPIRouter의 기본 호출주소 체계 정의하기
 app.use("/api/member", memberAPIRouter);
+app.use('api/article', articleAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
