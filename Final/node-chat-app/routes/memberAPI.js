@@ -13,6 +13,22 @@ const jwt = require("jsonwebtoken");
 //ORM db객체 참조하기
 var db = require("../models/index");
 
+//파일업로드를 위한 multer객체 참조하기
+var multer = require("multer");
+
+//파일저장위치 지정
+var storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, "public/upload/");
+  },
+  filename(req, file, cb) {
+    cb(null, `${Date.now()}__${file.originalname}`);
+  },
+});
+
+//일반 업로드처리 객체 생성
+var upload = multer({ storage: storage });
+
 /*
 - 신규 회원정보 등록처리 요청과 응답 라우팅메소드
 - 호출주소: http://localhost:5000/api/member/entry
@@ -35,6 +51,17 @@ router.post("/entry", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     const name = req.body.name;
+
+    //Step1-1: 신규회원 메일주소 중복검사 처리하기
+    const existMember = await db.Member.findOne({ where: { email: email } });
+
+    //동일한 메일주소 사용자가 있는경우 에러처리 데이터 반환
+    if (existMember) {
+      apiResult.code = 400;
+      apiResult.data = null;
+      apiResult.msg = "ExistMember";
+      return res.json(apiResult);
+    }
 
     //사용자암호를 단방향 암호화 문자열로 변환하기
     const encryptedPassword = await encrypt.hash(password, 12);
@@ -93,15 +120,10 @@ router.post("/login", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    console.log(email);
-    console.log(password);
-
     //Step2: 사용자 메일주소 존재여부를 체크합니다.
     const member = await db.Member.findOne({
       where: { email: email },
     });
-
-    console.log(member.member_password);
 
     if (member) {
       //동일 메일주소가 존재하는 경우
@@ -145,11 +167,93 @@ router.post("/login", async (req, res) => {
       apiResult.data = null;
       apiResult.msg = "NotExistEmail";
     }
+  } catch (err) {}
+
+  res.json(apiResult);
+});
+
+/*
+- 현재 로그인한 사용자의 상세 프로필 정보를 DB에서 조회하여 반환하는 라우팅메소드
+- 호출주소: http://localhost:5000/api/member/profile
+- 호출방식: Get
+- 응답결과: 프론트엔드에서 제공한 JWT토큰값을 전달받아 해당 사용자 메일주소로 DB에서 조회한 결과값 반환
+*/
+router.get("/profile", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+
+  try {
+    //Step1: 웹브라우저(헤더)에서 JWT토큰 값을 추출합니다.
+    //웹브라우저에서 전달되는 토큰값 예시: "Bearer dfkdjfkdjfkjdfkjdkfjdk"
+    var token = req.headers.authorization.split("Bearer ")[1];
+
+    //Step2: JWT 토큰 문자열내에서 인증사용자 JSON 데이터를 추출합니다.
+    //jwt.verify('토큰문자열',토큰생성시사용한 인증키값) 실행후 토큰내 저장된 json data를 반환함.
+    var loginMemberData = await jwt.verify(token, process.env.JWT_AUTH_KEY);
+
+    //Step3: 토큰 페이로드 영역에서 추출한 현재 로그인 사용자 고유번호를 기준으로 DB에서 단일사용자 조회
+    var dbMember = await db.Member.findOne({
+      where: { member_id: loginMemberData.member_id },
+    });
+
+    dbMember.member_password = ""; //굳이 사용자 암호값을 프론트에 전달할 필요없음..보안상..
+
+    //Step4: 단일 사용자 정보를 프론트엔드로 전달합니다.
+    apiResult.code = 200;
+    apiResult.data = dbMember;
+    apiResult.msg = "Ok";
   } catch (err) {
-    console.log(err);
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "Server Error";
   }
 
-  console.log(apiResult);
+  res.json(apiResult);
+});
+
+/*
+- 사용자 프로필 사진 업로드 및 정보 처리 라우팅메소드
+- 호출주소: http://localhost:5000/api/member/profile/upload
+- 호출방식: Post
+- 응답결과: 프론트엔드에서 첨부한 이미지 파일을 업로드처리하고 업로드된 정보를 반환한다.
+*/
+router.post("/profile/upload", upload.single("file"), async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+
+  try {
+    //Step1: 업로드된 파일 정보 추출하기
+    const uploadFile = req.file;
+
+    //실제 서버에 업로드된 파일경로
+    const filePath = `/upload/${uploadFile.filename}`;
+    const fileName = uploadFile.originalname; //서버에 업로드된 파일명(32243143422_a.png)
+    const fileSize = uploadFile.size; //파일크기
+    const mimeType = uploadFile.mimetype; //파일의 MIME타입
+
+    //파일정보를 DB에 저장하기
+    const file = {
+      filePath,
+      fileName,
+      fileSize,
+      mimeType,
+    };
+
+    //Step2: 업로드된 파일정보 반환하기
+    apiResult.code = 200;
+    apiResult.data = file;
+    apiResult.msg = "Ok";
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "Failed";
+  }
 
   res.json(apiResult);
 });
