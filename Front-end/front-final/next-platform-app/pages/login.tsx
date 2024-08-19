@@ -19,6 +19,39 @@ const Login = () => {
   const loginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //백엔드 Login RESTFul API를 호출한다.
+
+    //Case1: 웹브라우저 자바스크립트 엔진에 탑재되어있는 fetch()함수를 통해
+    //백엔드 RESTful Login API를 호출한다.
+    try{
+      const response=await fetch("",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},  
+        body:JSON.stringify(member),
+      });
+
+      //통신결과에서 로그인 API에서 반환한 JSON데이터 값 추출하기
+      const result= await response.json();
+      console.log("LOGIN API에서 반환한 요청 결과값:",result);
+
+      if(result.code==200){
+        console.log("정상적으로 로그인 완료!!!");
+        //백엔드에서 제공한 JWT토큰값 웹브라우저의 localStorage 저장소에 저장
+        //추후 Context API의 전역 데이터로 사용자 정보 저장
+        //메인페이지 또는 마이페이지로 이동처리
+      }else{
+        if(result.code= 400 && result.msg==""){
+          alert("해당 메일주소가 존재하지 않습니다.");
+          return false;
+        }
+      }
+        
+
+    }catch(err){
+
+    }catch(err){
+      console.error('백엔드 API호출에러 발생:',err);
+    }
+    }
   };
 
   return (
