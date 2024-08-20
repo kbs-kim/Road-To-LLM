@@ -7,10 +7,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const navigation = [
-  { name: 'Blog', href: '#' },
-  { name: 'Gallery', href: '#' },
-  { name: 'Chat', href: '#' },
-  { name: 'Company', href: '#' },
+  { name: 'Blog', href: '/blogs' },
+  { name: 'Gallery', href: '/gallary' },
+  { name: 'Chat', href: '/chat' },
+  { name: 'Bot', href: '/bot' },
 ];
 
 const Header = () => {

@@ -42,6 +42,30 @@ router.post("/dalle", async (req, res) => {
     const imageURL = response.data[0].url;
     console.log("dall 이미지 생성 URL경로: ", imageURL);
 
+
+    
+
+
+
+
+
+
+    axios({
+      url: imageURL,
+      responseType: "stream",
+    })
+      .then((response) => {
+        response.data
+          .pipe(fs.createWriteStream(imgFilePath))
+          .on("finish", () => {
+            console.log("Image saved successfully.");
+          })
+          .on("error", (err) => {
+            console.error("Error saving image:", err);
+          });
+      })
+      .catch((err) => {
+        console.error("Error downloading image:", err);
     //Step4: 최종 생성된 이미지 데이터 추출하기
 
     //Step5: DB 게시글 테이블에 사용자 이미지 생성요청 정보 등록처리하기
