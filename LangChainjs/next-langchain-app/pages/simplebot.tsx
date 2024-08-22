@@ -23,7 +23,7 @@ const SimpleBot = () => {
   const messageSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch("", {
+    const response = await fetch("/api/bot/simplebot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,8 +34,8 @@ const SimpleBot = () => {
     });
 
     if (response.status === 200) {
-      const data = await response.json();
-      setMessageList((prev) => [...prev, data.message]);
+      const result = await response.json();
+      setMessageList((prev) => [...prev, result.data]);
       setMessage("");
     }
   };
