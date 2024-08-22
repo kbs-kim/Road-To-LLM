@@ -1,3 +1,9 @@
+
+
+
+
+
+
 const people = [
   {
     name: 'Lindsay Walton',
@@ -11,7 +17,9 @@ const people = [
 const ChatList = () => {
   return (
     <div className="ml-32 mr-32 px-4 sm:px-6 lg:px-8">
+
       <div className="mt-32 sm:flex sm:items-center">
+        {/* 제목 및 설명 영역 */}
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
             채팅방 목록

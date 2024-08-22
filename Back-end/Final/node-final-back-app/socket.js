@@ -125,7 +125,7 @@ module.exports = (server) => {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
         {
-          model: "gpt-4o", //지원LLM모델명:gpt-3.5-turbo,gpt-4,gpt-4o,
+          model: "gpt-4o", //지원LLM모델명:gpt-3.5-turbo,gpt-4,gpt-4o,gpt-4o-mini
           messages: [{ role: "user", content: prompt }],
         },
         {
@@ -135,10 +135,12 @@ module.exports = (server) => {
           },
         }
       );
+
       //Step3: ChatGpt 응답메시지 반환받기
       const gptMessage = response.data.choices[0].message.content;
       //Step4) 프론트엔드 소켓으로 GPT응답메시지 데이터 전송하기
       msg.message = gptMessage;
+      msg.member_id = 0;
       socket.emit("gptMessage", msg);
     });
   });
