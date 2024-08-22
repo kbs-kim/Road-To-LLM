@@ -8,6 +8,15 @@ import type { NextApiRequest, NextApiResponse } from "next";
 //프론트엔드로 반환할 메시지 데이터 타입 참조하기
 import { IMessage, UserType } from "@/interfaces/message";
 
+//OpenAI LLM 서비스 객체 참조하기
+import { ChatOpenAI } from "@langchain/openai";
+
+//시스템,휴먼 메시지 객체를 참조합니다.
+import { SystemMessage, HumanMessage } from "@langchain/core/messages";
+
+//프롬프트 템플릿 참조하기
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+
 //서버에서 웹브라우저로 반환하는 처리결과 데이터 타입
 type ResponseData = {
   code: number;
@@ -17,7 +26,7 @@ type ResponseData = {
 
 //해당 업무(Hello)에 대한 C/R/U/D 처리를 위한 RESTFul API 기능구현 핸들러 함수
 //하나의 함수로 해당업무의 모든 라우팅방식을 통합해서 기능을 제공하는 통합 라우팅 함수
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
@@ -34,10 +43,42 @@ export default function handler(
       //Step1:프론트엔드에서 사용자 프롬프트 추출하기
       const prompt = req.body.message;
 
+      //Step2:LLM 모델 생성하기
+      const llm = new ChatOpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+
+      //Case1:초심플하게 llm연동하기
+      //const result = await llm.invoke(prompt);
+
+      //Case2: 메시지 객체를 이용해서 llm연동하기-PromptTemplate1
+      //SystemMessage 객체는 LLM의 역할이나 질문(힌트)에 관련된 주요정보를 LLM에게 전달하는 역할제공
+      //HumanMessage 객체는 사용자 보낸 질문 메시지를 저장해서 llm에 전달가능한 객체
+      // const messages = [
+      //   new SystemMessage("당신은 세계적으로 유명한 코메디언 입니다."),
+      //   new HumanMessage(prompt),
+      // ];
+      // const result = await llm.invoke(messages);
+      // console.log("LLM 응답결과 메시지타입 확인하기=AIMessage:", result);
+
+      //Case3:ChatPromptTempate을 이용한 프롬프트 전달하기
+      //프롬프트 템플리이란? LLM에게 전달할수 있는 다양한 질문 템플릿을 제공하여 보다 효율적인 질문형식을
+      //만들어 LLM에게 제공해 좋은 답변을 만들기 위한 방식제공
+      //의도: 좋은 질문이 좋은 답변을 만든다.
+      const promptTemplate = ChatPromptTemplate.fromMessages([
+        ["system", "당신은 뛰어난 실력을 가진 쉐프입니다."],
+        ["user", "{input}"],
+      ]);
+
+      //template.pipe(LLM모델) : chain객체 반환(chain은 처리할 작업의 기본단위)
+      //chain(처리할작업)을 여러개 생성하고 chain연결해 로직을 구현하는 방식이 LangChain이다..
+      const chain = promptTemplate.pipe(llm);
+      const result = await chain.invoke({ input: prompt });
+
       //메시지 처리결과데이터
       const resultMsg: IMessage = {
-        user_type: UserType.USER,
-        message: prompt,
+        user_type: UserType.BOT,
+        message: result.content as string,
         send_date: Date.now().toString(),
       };
 
