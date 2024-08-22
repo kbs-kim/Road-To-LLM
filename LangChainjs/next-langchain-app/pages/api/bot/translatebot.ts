@@ -1,4 +1,4 @@
-// 호출주소: http://localhost:3000/api/bot/simplebot
+// 호출주소: http://localhost:3000/api/bot/translatebot
 // 라우팅 주소는 /api 폴더 아래 물리적 폴더명과 파일명으로 라우팅 주소가 설정됨
 
 //NextApiRequest 타입는 웹브라우저에서 서버로 전달되는 각종 정보를 추출하는 HTTPRequest 객체=req
@@ -45,6 +45,7 @@ export default async function handler(
     //클라이언트에서 POST방식 요청해오는 경우 처리
     if (req.method == "POST") {
       //Step1:프론트엔드에서 사용자 프롬프트 추출하기
+      const role = req.body.role;
       const prompt = req.body.message;
 
       //Step2:LLM 모델 생성하기
@@ -53,60 +54,30 @@ export default async function handler(
         apiKey: process.env.OPENAI_API_KEY,
       });
 
-      //Case1:초심플하게 llm연동하기
-      //const result = await llm.invoke(prompt);
-
-      //Case2: 메시지 객체를 이용해서 llm연동하기-PromptTemplate1
-      //SystemMessage 객체는 LLM의 역할이나 질문(힌트)에 관련된 주요정보를 LLM에게 전달하는 역할제공
-      //HumanMessage 객체는 사용자 보낸 질문 메시지를 저장해서 llm에 전달가능한 객체
-      // const messages = [
-      //   new SystemMessage("당신은 세계적으로 유명한 코메디언 입니다."),
-      //   new HumanMessage(prompt),
-      // ];
-      // const result = await llm.invoke(messages);
-      // console.log("LLM 응답결과 메시지타입 확인하기=AIMessage:", result);
-
-      //Case3:ChatPromptTempate을 이용한 프롬프트 전달하기
+      //ChatPromptTempate을 이용한 프롬프트 전달하기
       //프롬프트 템플리이란? LLM에게 전달할수 있는 다양한 질문 템플릿을 제공하여 보다 효율적인 질문형식을
       //만들어 LLM에게 제공해 좋은 답변을 만들기 위한 방식제공
       //의도: 좋은 질문이 좋은 답변을 만든다.
-      // const promptTemplate = ChatPromptTemplate.fromMessages([
-      //   ["system", "당신은 뛰어난 실력을 가진 쉐프입니다."],
-      //   ["user", "{input}"],
-      // ]);
-
-      // //template.pipe(LLM모델) : chain객체 반환(chain은 처리할 작업의 기본단위)
-      // //chain(처리할작업)을 여러개 생성하고 chain연결해 로직을 구현하는 방식이 LangChain이다..
-      // const chain = promptTemplate.pipe(llm);
-      // const result = await chain.invoke({ input: prompt });
-
-      //CASE4 : LLM 응답 결과 메시지는 기본 AIMessage 객체를 반환하지만
-      //해당 타입을 맞춤형 데이터 타입으로 변환해주는 OutParser를 이용해 원하는 포맷으로 변경가능하다
-      const outputParser = new StringOutputParser();
       const promptTemplate = ChatPromptTemplate.fromMessages([
-        ["system", "당신은 근대사 역사학자입니다."],
+        ["system", role],
         ["user", "{input}"],
       ]);
 
-      //template.pipe().pipe(): 두개의 체인을 만들과 순차적으로 두개의 체인목록을 가진 결과체인 반환..
-      //llm모델에의해 결과메시지(AIMessage)를 받아 StringOutputParser를 통해 문자열로 변환한 결과제공
-      const chains = promptTemplate.pipe(llm).pipe(outputParser);
+      //template.pipe(LLM모델) : chain객체 반환(chain은 처리할 작업의 기본단위)
+      //chain(처리할작업)을 여러개 생성하고 chain연결해 로직을 구현하는 방식이 LangChain이다..
+      const chain = promptTemplate.pipe(llm);
+      const result = await chain.invoke({ input: prompt });
 
-      //outputParser로 인해 result값은 실제 llm의 응답메시지 문자열이 반환됨(AIMessage.content)
-      const resultMessage = await chains.invoke({ input: prompt });
+      //Case2: System,Human Message를 이용한 llm호출을 구현해주세요.
 
-      const resultMsg: IMessage = {
-        user_type: UserType.BOT,
-        message: resultMessage,
-        send_date: Date.now().toString(),
-      };
+      //Case3:StringOutpaser를 이용한 결과물 파싱처리 코드를 작성해주세요.
 
       //메시지 처리결과데이터: result가 AIMessage타입인경우(CASE1~3에 해당하는 경우만)
-      // const resultMsg: IMessage = {
-      //   user_type: UserType.BOT,
-      //   message: result.content as string,
-      //   send_date: Date.now().toString(),
-      // };
+      const resultMsg: IMessage = {
+        user_type: UserType.BOT,
+        message: result.content as string,
+        send_date: Date.now().toString(),
+      };
 
       //Step2:API 호출결과 설정
       apiResult.code = 200;
