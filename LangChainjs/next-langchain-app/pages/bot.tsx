@@ -1,22 +1,26 @@
 import { useState } from "react";
-import { IMessage, UserType } from "@/interfaces/message";
+import { IMemberMessage, UserType } from "@/interfaces/message";
 
 import moment from "moment";
 
 const Bot = () => {
+  //사용자 대화닉네임 상태값 정의
+  const [nickName, setNickName] = useState<string>("");
+
   //사용자 입력 채팅 메시지 상태값 정의 및 초기화
   const [message, setMessage] = useState<string>("");
 
   //챗봇과의 채팅이력 상태값 목록 정의 초기화
-  const [messageList, setMessageList] = useState<IMessage[]>([]);
+  const [messageList, setMessageList] = useState<IMemberMessage[]>([]);
 
   //메시지 전송 버튼 클릭시 메시지 백엔드 API 전송하기
   const messageSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     //백엔드로 사용자 메시지를 전송하기 전에 사용
-    const userMessage: IMessage = {
+    const userMessage: IMemberMessage = {
       user_type: UserType.USER,
+      nick_name: nickName,
       message: message,
       send_date: new Date(),
     };
@@ -32,6 +36,7 @@ const Bot = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        nickName,
         message,
       }),
     });
@@ -121,7 +126,17 @@ const Bot = () => {
 
               {/* 메시지 입력요소 영역 */}
               <div className="flex-grow ml-4">
-                <div className="relative w-full">
+                <div className="flex w-full">
+                  <input
+                    type="text"
+                    placeholder="닉네임"
+                    value={nickName}
+                    onChange={(e) => {
+                      setNickName(e.target.value);
+                    }}
+                    className="flex w-[80px] border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                  />
+
                   <input
                     type="text"
                     name={message}
@@ -129,7 +144,7 @@ const Bot = () => {
                     onChange={(e) => {
                       setMessage(e.target.value);
                     }}
-                    className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                    className="flex ml-2 w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                   />
                 </div>
               </div>
