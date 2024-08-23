@@ -1,7 +1,7 @@
 export interface IMessage {
   user_type: UserType;
   message: string;
-  send_date: string;
+  send_date: Date;
 }
 
 export enum UserType {
@@ -10,6 +10,6 @@ export enum UserType {
 }
 
 export interface ISendMessage {
-  role:string;
-  message:string;
+  role: string;
+  message: string;
 }

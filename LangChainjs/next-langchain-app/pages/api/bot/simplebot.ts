@@ -98,7 +98,7 @@ export default async function handler(
       const resultMsg: IMessage = {
         user_type: UserType.BOT,
         message: resultMessage,
-        send_date: Date.now().toString(),
+        send_date: new Date(),
       };
 
       //메시지 처리결과데이터: result가 AIMessage타입인경우(CASE1~3에 해당하는 경우만)
