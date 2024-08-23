@@ -30,7 +30,7 @@ const SearchBot = () => {
     //백엔드에서 두번에 응답을 받아올수 없어서 그래용..
     setMessageList((prev) => [...prev, userMessage]);
 
-    const response = await fetch("/api/bot", {
+    const response = await fetch("/api/agent/searchbot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
