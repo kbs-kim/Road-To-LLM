@@ -1,9 +1,6 @@
-// 호출주소: http://localhost:3000/api/bot
-// 검색엔진 Agent 사용하기
+// 호출주소: http://localhost:3000/api/agent/pagebot
+// 웹페이지 지식베이스 Agent 챗봇 구현하기
 import type { NextApiRequest, NextApiResponse } from "next";
-
-//검색엔진 서비스인 타빌리 Community Agent 객체 참조하기
-import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 
 //프론트엔드로 반환할 메시지 데이터 타입 참조하기
 import { IMemberMessage, UserType } from "@/interfaces/message";
@@ -21,26 +18,12 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 //StringOutputParser는 AIMessage타입에서 content속성값만 문자열로 반환해주는 파서입니다.
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
-//챗봇과의 대화이력정보 관리를 위한 메모리 기반 InMemoryChatMessageHistory 객체 참조하기
-import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
-
-//대화이력 관리를 위한 세부 주요 객체 참조하기
-import {
-  RunnableWithMessageHistory,
-  RunnablePassthrough,
-  RunnableSequence,
-} from "@langchain/core/runnables";
-
 //서버에서 웹브라우저로 반환하는 처리결과 데이터 타입
 type ResponseData = {
   code: number;
   data: string | null | IMemberMessage;
   msg: string;
 };
-
-//메모리 영역에 실제 대화이력이  저장되는 전역변수 선언 및 구조정의
-//Record<string:사용자세션아이디, InMemoryChatMessageHistory:사용자별대화이력객체>
-const messageHistories: Record<string, InMemoryChatMessageHistory> = {};
 
 export default async function handler(
   req: NextApiRequest,
@@ -65,18 +48,6 @@ export default async function handler(
         model: "gpt-4o",
         apiKey: process.env.OPENAI_API_KEY,
       });
-
-      //Step3:타빌리 검색엔진 툴 기반 조회하기
-      const searchTool = new TavilySearchResults();
-
-      //검색엔진 타빌리에 사용자 질문을 전달하고 응답값을 반환받습니다.
-      const searchResult = await searchTool.invoke(prompt);
-
-      //타빌리 조회결과값은 JSON문자열 포맷으로 제공되므로 JSON객체로 변환해서 사용하면 편해요.
-      const result = JSON.parse(searchResult);
-
-      //외부 Agent Tool을 사용하는 경우 반환값 타입을 정확히 확인해볼 필요가 있습니다.
-      console.log("Tavily SearchResult:", searchResult);
 
       //프론트엔드로 반환되는 메시지 데이터 생성하기
       const resultMsg: IMemberMessage = {
