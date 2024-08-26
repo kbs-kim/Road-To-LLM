@@ -2,9 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/login": "pages/login.js",
-  "/regist": "pages/regist.js",
   "/chat/list": "pages/chat/list.js",
-  "/bot": "pages/bot.js"
+  "/": "pages/index.js",
+  "/chat/create": "pages/chat/create.js",
+  "/login": "pages/login.js",
+  "/chat": "pages/chat.js"
 }
