@@ -1,5 +1,5 @@
 // 호출주소: http://localhost:3000/api/pdfpineconebot
-// PDF파일 PineCone Cloud Vectore DB 기반 RAG 챗봇 구현하기
+// PDF파일 PineCone Cloud Vector DB 기반 RAG 챗봇 구현하기
 // PDF 파일내 텍스트 추출을 위한 npm i pdf-parse 설치 필요
 // npm install @langchain/pinecone
 // npm install @pinecone-database/pinecone
